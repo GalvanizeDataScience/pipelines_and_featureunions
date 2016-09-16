@@ -346,7 +346,8 @@ div.output_prompt {
 </li>
 <li>Promotes modeling choices to parameters<ul>
 <li>Transformation to linearize a feature</li>
-<li>Decision about imput</li>
+<li>Handling missing values</li>
+<li>Constructing features</li>
 </ul>
 </li>
 <li>Readability<ul>
@@ -613,7 +614,7 @@ div.output_prompt {
         <span class="sd">&quot;&quot;&quot;Recommended signature for custom transformer&#39;s</span>
 <span class="sd">        transform method.</span>
 
-<span class="sd">        Use state (if any) to transform some X data. This X</span>
+<span class="sd">        Transform some X data, optionally using state set in fit. This X</span>
 <span class="sd">        may be the same X passed to fit, but it may also be new data,</span>
 <span class="sd">        as in the case of a CV dataset. Both are treated the same.</span>
 <span class="sd">        &quot;&quot;&quot;</span>

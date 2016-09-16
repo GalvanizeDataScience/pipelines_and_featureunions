@@ -284,6 +284,7 @@ div.output_prompt {
 <li>Why should I care?</li>
 <li>Basic example of how they work.</li>
 <li>Best practices for writing custom Transformers.</li>
+<li>Get one hairy example under our belts.</li>
 <li>Note some of the weaknesses and forthcoming features.</li>
 </ol>
 
@@ -303,7 +304,7 @@ div.output_prompt {
 <li>Estimators might include models, transformations etc.</li>
 <li><code>FeatureUnion</code> takes calls estimators which returns columns in parallel and <code>np.hstack</code>s the results together.</li>
 <li><code>Pipeline</code> Applies a sequence of transforms in series.</li>
-<li>They can be used together.</li>
+<li>They can (and should) be used together.</li>
 </ul>
 
 </div>
@@ -316,7 +317,7 @@ div.output_prompt {
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="The-Best-Part-of-sklearn">The Best Part of <code>sklearn</code><a class="anchor-link" href="#The-Best-Part-of-sklearn">&#182;</a></h1><ul>
-<li>Sub-best parts of <code>sklearn</code><ul>
+<li>Other parts of <code>sklearn</code><ul>
 <li>Supervised learning</li>
 <li>Unsupervised learning</li>
 <li>Model selection and evaluation</li>
@@ -343,7 +344,11 @@ div.output_prompt {
 <li>object orientedness</li>
 </ul>
 </li>
-<li>Promotes modeling choices to parameters</li>
+<li>Promotes modeling choices to parameters<ul>
+<li>Transformation to linearize a feature</li>
+<li>Decision about imput</li>
+</ul>
+</li>
 <li>Readability<ul>
 <li>Separates implementation details from general approach.</li>
 </ul>
@@ -680,7 +685,7 @@ OK
     
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># %load scaler.py</span>
@@ -869,6 +874,64 @@ OK
 </div>
 </div>
 
+</div>
+
+</div>
+</div>
+
+</div></section><section>
+    
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Practice">Practice<a class="anchor-link" href="#Practice">&#182;</a></h1><p>Write a feature union that takes a single-vector as input and returns 3 columns corresponding to the square-root transformation, the identity transformation, and the square transformation.</p>
+<p><em>Hint:</em> <code>sklearn.preprocessing.FunctionTransformer</code> takes a function as an argument and converts it to a simple Transformer.</p>
+
+</div>
+</div>
+</div></section><section>
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">FunctionTransformer</span>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">FeatureUnion</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="n">fu</span> <span class="o">=</span> <span class="n">FeatureUnion</span><span class="p">([(</span><span class="s1">&#39;sqrt&#39;</span><span class="p">,</span><span class="n">FunctionTransformer</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">)),</span>
+                  <span class="p">(</span><span class="s1">&#39;identity&#39;</span><span class="p">,</span><span class="n">FunctionTransformer</span><span class="p">()),</span>
+                  <span class="p">(</span><span class="s1">&#39;square&#39;</span><span class="p">,</span> <span class="n">FunctionTransformer</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">))])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">X</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">fu</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)[:</span><span class="mi">5</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[ 0.11021486]
+ [ 0.64792271]
+ [ 0.19943493]
+ [ 0.8543808 ]
+ [ 0.71626191]]
+[[ 0.33198624  0.11021486  0.01214732]
+ [ 0.80493646  0.64792271  0.41980384]
+ [ 0.44658139  0.19943493  0.03977429]
+ [ 0.92432722  0.8543808   0.72996655]
+ [ 0.84632258  0.71626191  0.51303113]]
+</pre>
+</div>
 </div>
 
 </div>

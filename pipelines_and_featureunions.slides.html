@@ -299,7 +299,7 @@ div.output_prompt {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="What-are-Pipelines-and-FeatureUnions?">What are Pipelines and FeatureUnions?<a class="anchor-link" href="#What-are-Pipelines-and-FeatureUnions?">&#182;</a></h1><ul>
+<h1 id="1.-What-are-Pipelines-and-FeatureUnions?">1. What are Pipelines and FeatureUnions?<a class="anchor-link" href="#1.-What-are-Pipelines-and-FeatureUnions?">&#182;</a></h1><ul>
 <li>Method for chaining multiple estimators into a single one.</li>
 <li>Estimators might include models, transformations etc.</li>
 <li><code>FeatureUnion</code> takes calls estimators which returns columns in parallel and <code>np.hstack</code>s the results together.</li>
@@ -334,7 +334,7 @@ div.output_prompt {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Why-are-Pipelines-and-FeatureUnions-so-great?">Why are Pipelines and FeatureUnions so great?<a class="anchor-link" href="#Why-are-Pipelines-and-FeatureUnions-so-great?">&#182;</a></h1><ul>
+<h1 id="2.-Why-are-Pipelines-and-FeatureUnions-so-great?">2. Why are Pipelines and FeatureUnions so great?<a class="anchor-link" href="#2.-Why-are-Pipelines-and-FeatureUnions-so-great?">&#182;</a></h1><ul>
 <li>Encourage good habits like:<ul>
 <li>separation of concerns<ul>
 <li>cross-validation, development/computation</li>
@@ -366,7 +366,7 @@ div.output_prompt {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Why-are-Pipelines-and-FeatureUnions-so-great?">Why are Pipelines and FeatureUnions so great?<a class="anchor-link" href="#Why-are-Pipelines-and-FeatureUnions-so-great?">&#182;</a></h1><p><img src="images/440px-CRISP-DM_Process_Diagram.png" alt="CRISP-DM Process Diagram"></p>
+<h1 id="2.-Why-are-Pipelines-and-FeatureUnions-so-great?">2. Why are Pipelines and FeatureUnions so great?<a class="anchor-link" href="#2.-Why-are-Pipelines-and-FeatureUnions-so-great?">&#182;</a></h1><p><img src="images/440px-CRISP-DM_Process_Diagram.png" alt="CRISP-DM Process Diagram"></p>
 
 </div>
 </div>
@@ -392,7 +392,7 @@ div.output_prompt {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="How-do-they-work?">How do they work?<a class="anchor-link" href="#How-do-they-work?">&#182;</a></h1><ul>
+<h1 id="3.-How-do-they-work?">3. How do they work?<a class="anchor-link" href="#3.-How-do-they-work?">&#182;</a></h1><ul>
 <li>Initialize with a list of (name, estimator) tuples.</li>
 <li>All but the last of these estimators must implement <code>transform</code> method.</li>
 <li>From the docs: <blockquote>Calling fit on the pipeline is the same as calling fit on each estimator in turn, transform the input and pass it on to the next step. The pipeline has all the methods that the last estimator in the pipeline has, i.e. if the last estimator is a classifier, the Pipeline can be used as a classifier. If the last estimator is a transformer, again, so is the pipeline.</blockquote></li>
@@ -992,7 +992,7 @@ OK
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Practice">Practice<a class="anchor-link" href="#Practice">&#182;</a></h1><p>Putting it all together: creating a matrix of heterogeneous data types.</p>
+<h1 id="5.-Practice">5. Practice<a class="anchor-link" href="#5.-Practice">&#182;</a></h1><p>Putting it all together: creating a matrix of heterogeneous data types.</p>
 
 </div>
 </div>
@@ -1158,6 +1158,70 @@ OK
 
 </div>
 </div>
+</div></section><section>
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1">#This is use</span>
+<span class="k">class</span> <span class="nc">ItemSelector</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;For data grouped by feature, select subset of data at a provided key.</span>
+
+<span class="sd">    The data is expected to be stored in a 2D data structure, where the first</span>
+<span class="sd">    index is over features and the second is over samples.  i.e.</span>
+
+<span class="sd">    &gt;&gt; len(data[key]) == n_samples</span>
+
+<span class="sd">    Please note that this is the opposite convention to sklearn feature</span>
+<span class="sd">    matrixes (where the first index corresponds to sample).</span>
+
+<span class="sd">    ItemSelector only requires that the collection implement getitem</span>
+<span class="sd">    (data[key]).  Examples include: a dict of lists, 2D numpy array, Pandas</span>
+<span class="sd">    DataFrame, numpy record array, etc.</span>
+
+<span class="sd">    &gt;&gt; data = {&#39;a&#39;: [1, 5, 2, 5, 2, 8],</span>
+<span class="sd">               &#39;b&#39;: [9, 4, 1, 4, 1, 3]}</span>
+<span class="sd">    &gt;&gt; ds = ItemSelector(key=&#39;a&#39;)</span>
+<span class="sd">    &gt;&gt; data[&#39;a&#39;] == ds.transform(data)</span>
+
+<span class="sd">    ItemSelector is not designed to handle data grouped by sample.  (e.g. a</span>
+<span class="sd">    list of dicts).  If your data is structured this way, consider a</span>
+<span class="sd">    transformer along the lines of `sklearn.feature_extraction.DictVectorizer`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    key : hashable, required</span>
+<span class="sd">        The key corresponding to the desired value in a mappable.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">data_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
 </div></section>
     </section>
 </div>
